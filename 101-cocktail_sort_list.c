@@ -77,7 +77,7 @@ void cocktail_sort_list(listint_t **list)
 		{
 			if (shaker->n > shaker->next->n)
 			{
-				swap_node_ahead(list, &tail, &shaker);
+				swn_ahead(list, &tail, &shaker);
 				print_list((const listint_t *)*list);
 				b = 0;
 			}
@@ -87,7 +87,7 @@ void cocktail_sort_list(listint_t **list)
 		{
 			if (shaker->n < shaker->prev->n)
 			{
-				swap_node_behind(list, &tail, &shaker);
+				swn_behind(list, &tail, &shaker);
 				print_list((const listint_t *)*list);
 				b = 0;
 			}
