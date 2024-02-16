@@ -1,82 +1,88 @@
 #include "sort.h"
 
-void swap(int *array, size_t item1, size_t item2);
-int lomuto_partition(int *array, size_t first, size_t last, size_t size);
-void qs(int *array, size_t first, size_t last, int size);
+void swap_ints(int *a, int *b);
+int lomuto_partition(int *array, size_t size, int left, int right);
+void ls(int *array, size_t size, int left, int right);
+void quick_sort(int *array, size_t size);
+
 /**
-*swap - the positions of two elements into an array
-*@array: array
-*@item1: array element
-*@item2: array element
-*/
-void swap(int *array, size_t item1, size_t item2)
+ * swap_ints - swaps two integers.
+ * @a: The first int to swap.
+ * @b: The second int to swap.
+ */
+void swap_ints(int *a, int *b)
 {
 	int tmp;
 
-	tmp = array[item1];
-	array[item1] = array[item2];
-	array[item2] = tmp;
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
 }
-/**
- *lomuto_partition - lomuto partition sorting scheme implementation
- *@array: array
- *@first: first array element
- *@last: last array element
- *@size: size array
- *Return: return the position of the last element sorted
- */
-int lomuto_partition(int *array, size_t first, size_t last, size_t size)
-{
-	int pivot = array[last];
-	size_t current = first, finder;
 
-	for (finder = first; finder < last; finder++)
+/**
+ * lomuto_partition - the lomuto partition scheme implementation.
+ * @array: The input array.
+ * @size: The size of the array.
+ * @first: The starting element of the array.
+ * @last: The ending element of the array.
+ *
+ * Return: The index of the last element sorted.
+ */
+int lomuto_partition(int *array, size_t size, int first, int last)
+{
+	int *pivot, above, below;
+
+	pivot = array + last;
+	for (above = below = first; below < last; below++)
 	{
-		if (array[finder] < pivot)
+		if (array[below] < *pivot)
 		{
-			if (array[current] != array[finder])
+			if (above < below)
 			{
-				swap(array, current, finder);
+				swap_ints(array + below, array + above);
 				print_array(array, size);
 			}
-			current++;
+			above++;
 		}
 	}
-	if (array[current] != array[last])
+
+	if (array[above] > *pivot)
 	{
-		swap(array, current, last);
+		swap_ints(array + above, pivot);
 		print_array(array, size);
 	}
-	return (current);
+
+	return (above);
 }
+
 /**
- *qs - qucksort algorithm implementation
- *@array: array
- *@first: first array element
- *@last: last array element
- *@size: array size
+ * ls - implements the quicksort algorithm.
+ * @array: the input array.
+ * @size: The size of the array.
+ * @first: The starting element of the array.
+ * @last: The ending element of the array.
  */
-void qs(int *array, size_t first, size_t last, int size)
+void ls(int *array, size_t size, int first, int last)
 {
-	size_t position = 0;
+	int part;
 
-
-	if (first < last)
+	if (last - first > 0)
 	{
-		position = lomuto_partition(array, first, last, size);
-
-		qs(array, first, position - 1, size);
-		qs(array, position + 1, last, size);
+		part = lomuto_partition(array, size, first, last);
+		ls(array, size, first, part - 1);
+		ls(array, size, part + 1, last);
 	}
 }
+
 /**
- *quick_sort - prepare the terrain to quicksort algorithm
- *@array: array
- *@size: array size
+ * quick_sort - uses the quick sort algo to sort an array.
+ * @array: An array of integers.
+ * @size: The size of the array.
  */
 void quick_sort(int *array, size_t size)
 {
-	if (!array || size < 2)
+	if (array == NULL || size < 2)
 		return;
-	qs(array, 0, size - 1, size);
+
+	ls(array, size, 0, size - 1);
 }
